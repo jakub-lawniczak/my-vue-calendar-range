@@ -13,21 +13,8 @@ export default {
     props: ['price'],
     components: {
         ReservationFormStarRating
-    },  
-    methods: {
-        // randomValue: function () {
-        //     return (Math.random()*4+1).toFixed(2);
-        // },
-        // randomReviewsNumber: function () {
-        //     return Math.ceil(Math.random()*2500+1);
-        // }
-    },
-    mounted() {
-        // this.randomValue();
-        // this.randomReviewsNumber();
     },
   }
-
 </script>
 <style scoped lang="scss">
 .form-header {

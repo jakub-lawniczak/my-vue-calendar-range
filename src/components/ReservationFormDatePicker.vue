@@ -82,7 +82,8 @@ export default {
             }
         }
         &__arrow {
-            width: 12px;
+            width: 24px;
+            margin: 0 10px;
         }
     }
 </style>
