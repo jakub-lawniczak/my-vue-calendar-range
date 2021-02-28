@@ -3,7 +3,7 @@
     <p class="form-header__price">
       {{ price }} zł
     </p>
-    <ReservationFormStarRating :max="5" :stars="this.randomValue()" :reviewsNumber="this.randomReviewsNumber()"></ReservationFormStarRating>
+    <ReservationFormStarRating :max="5" :stars="4.5" :reviewsNumber="123"></ReservationFormStarRating>
   </div>
 </template>
 
@@ -15,16 +15,16 @@ export default {
         ReservationFormStarRating
     },  
     methods: {
-        randomValue: function () {
-            return (Math.random()*4+1).toFixed(2);
-        },
-        randomReviewsNumber: function () {
-            return Math.ceil(Math.random()*2500+1);
-        }
+        // randomValue: function () {
+        //     return (Math.random()*4+1).toFixed(2);
+        // },
+        // randomReviewsNumber: function () {
+        //     return Math.ceil(Math.random()*2500+1);
+        // }
     },
     mounted() {
-        this.randomValue();
-        this.randomReviewsNumber();
+        // this.randomValue();
+        // this.randomReviewsNumber();
     },
   }
 

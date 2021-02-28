@@ -3,6 +3,7 @@
     <div class="form-box__content">
       <ReservationFormHeader :price="price"></ReservationFormHeader>
       <ReservationFormDatePicker></ReservationFormDatePicker>
+      <ReservationFormOptions></ReservationFormOptions> 
     </div>
   </div>
 </template>
@@ -10,12 +11,18 @@
 <script>
 import ReservationFormHeader from './ReservationFormHeader.vue'
 import ReservationFormDatePicker from './ReservationFormDatePicker.vue'
+import ReservationFormOptions from './ReservationFormOptions.vue'
 export default {
-  props: ['price'],
   name: 'ReservationForm',
+    data() {
+    return {
+      price: 298   
+    }
+  }, 
   components: {
     ReservationFormHeader,
-    ReservationFormDatePicker
+    ReservationFormDatePicker,
+    ReservationFormOptions
   },
 
 }
