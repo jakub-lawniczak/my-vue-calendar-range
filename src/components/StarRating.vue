@@ -1,21 +1,21 @@
 <template>
   <div class="star-rating">
-    <span v-for="n in max">&star;</span>
-    <div class="star-rating__current" :style="{width: getRating + '%'}">
-      <span v-for="n in max">&starf;</span>
+    <span v-for="n in max" v-bind:key="n">&star;</span>
+    <div class="star-rating__current" :style="{ width: getRating + '%' }">
+      <span v-for="n in max" v-bind:key="n">&starf;</span>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-props: ['max', 'current'],
+  props: ["max", "current"],
   computed: {
     getRating: function() {
-      return (this.current / this.max) * 100
+      return (this.current / this.max) * 100;
     }
   }
-}
+};
 </script>
 
 <style>
