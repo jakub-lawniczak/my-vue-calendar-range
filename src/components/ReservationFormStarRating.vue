@@ -2,9 +2,9 @@
 <div class="star-rating-hld">
   <div class="star-rating">
     <span v-for="n in max" v-bind:key="n">&star;</span>
-        <p class="star-rating__reviews">{{ reviewsNumber }}</p>
-    <div class="star-rating__current" :style="{width: getRating + '%'}">
-      <span v-for="m in max" v-bind:key="m">&starf;</span>
+    <p class="star-rating__reviews">{{ reviewsNumber }}</p>
+    <div class="star-rating__current" :style="{width: rating + '%'}">
+    <span v-for="m in max" v-bind:key="m">&starf;</span>
     </div>
   </div>
   </div>
@@ -15,7 +15,7 @@
 export default {
     props: ['max', 'stars', 'reviewsNumber'],
     computed: {
-        getRating: function() {
+        rating: function() {
         return (this.stars / this.max) * 100
         }
     }

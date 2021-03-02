@@ -1,9 +1,9 @@
 <template>
   <div class="form-box">
     <div class="form-box__content">
-      <ReservationFormHeader :price="price"></ReservationFormHeader>
-      <ReservationFormDatePicker></ReservationFormDatePicker>
-      <ReservationFormData></ReservationFormData> 
+      <ReservationFormHeader :price="price" :max="max" :stars="stars" :reviewsNumber="reviewsNumber"></ReservationFormHeader>
+      <ReservationFormDatePicker :disabledDays="disabledDays" :dateRange="dateRange" @update:dateRange="$emit('update:dateRange', $event)"></ReservationFormDatePicker>
+      <ReservationFormData :value='reservationData' @input="$emit('update:reservationData', $event)"></ReservationFormData> 
     </div>
   </div>
 </template>
@@ -13,12 +13,8 @@ import ReservationFormHeader from './ReservationFormHeader.vue'
 import ReservationFormDatePicker from './ReservationFormDatePicker.vue'
 import ReservationFormData from './ReservationFormData.vue'
 export default {
+  props: ['price', 'max', 'stars', 'reviewsNumber', 'disabledDays', 'dateRange', 'reservationData'],
   name: 'ReservationForm',
-    data() {
-    return {
-      price: 298   
-    }
-  }, 
   components: {
     ReservationFormHeader,
     ReservationFormDatePicker,

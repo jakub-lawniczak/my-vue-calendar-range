@@ -1,6 +1,6 @@
 <template>
     <div>
-        <form @submit="checkForm" novalidate="true">
+        <form @submit.prevent="checkForm" novalidate="true">
             <div class="form-data">
                 <div class="form-data__row">
                     <label class="form-data__label" for="first-name">First Name</label>
@@ -27,6 +27,7 @@
 
 <script>
 export default {
+    props: ['value'],
     data() {
         return {
             userData: {
@@ -38,11 +39,27 @@ export default {
                 firstName: '',
                 lastName: '',
                 email: '',
+            },
+        }
+    },
+    watch:{
+        value: {
+            immediate: true,
+            handler(newValue, oldValue) {
+                if(JSON.stringify(newValue) != JSON.stringify(oldValue)){
+                    this.userData = {...newValue}
+                }
+            } 
+        },
+        userData: {
+            deep: true,
+            handler(userData) {
+                this.$emit('input', userData)
             }
         }
     },
     methods: {
-        checkForm: function (e) {
+        checkForm: function () {
             if (!this.userData.firstName) {
                 this.error.firstName = "First name required.";
             } else {
@@ -60,14 +77,12 @@ export default {
             } else {
                 this.error.email = null;
             }
-            e.preventDefault();
         },
         validEmail: function(email) {
             const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             return re.test(email);
         }
     }
-
 }
 </script>
 

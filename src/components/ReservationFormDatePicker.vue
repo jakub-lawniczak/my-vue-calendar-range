@@ -6,7 +6,7 @@
             <img src="../assets/icons/arrow.svg" alt="arrow" class="date-picker__arrow">
             <button class="date-picker__btn" type="button" :class="(mode && calendarVisible)  ? 'active' : ''" @click="selectMode(true)" :disabled="!mode">{{ checkOut }}</button>
         </div>
-        <ReservationFormCalendar v-if="calendarVisible" @input="selected" v-model="dateRange" :mode="mode" :disabledDays="['2021-05-01', '2021-05-03', '2021-12-24']"></ReservationFormCalendar>
+        <ReservationFormCalendar v-if="calendarVisible" @input="selected" :value="dateRange" :mode="mode" :disabledDays="disabledDays"></ReservationFormCalendar>
     </div>
 </template>
 
@@ -14,23 +14,24 @@
 import dayjs from 'dayjs';
 import ReservationFormCalendar from './ReservationFormCalendar.vue'
 export default {
+    props: ['disabledDays', 'dateRange'],
     components: {
         ReservationFormCalendar
     },
     data() {
         return {
             mode: false,
-            dateRange: [],
             calendarVisible: false,
         }
     },
     methods: {
-        selected: function() {
+        selected: function(dateRange) {
             if(!this.mode) {
                 this.mode = true;
             } else {
                 this.calendarVisible = false;
             }
+            this.$emit('update:dateRange', dateRange);
         },
         selectMode: function (mode) {
             this.calendarVisible = true;

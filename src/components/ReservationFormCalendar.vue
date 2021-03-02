@@ -15,20 +15,20 @@
               <div>
                 <button class="calendar__btn calendar__btn--next" v-on:click="nextMonth">
                   <img src="../assets/icons/next.svg" class="icon" alt="next">
-                  </button>
+                </button>
               </div>
             </div>
             <ul class="calendar__table-week-days">
+              <li class="calendar__table-week-day">Sun</li>
               <li class="calendar__table-week-day">Mon</li>
               <li class="calendar__table-week-day">Tue</li>
               <li class="calendar__table-week-day">Wen</li>
               <li class="calendar__table-week-day">Thu</li>
               <li class="calendar__table-week-day">Fri</li>
               <li class="calendar__table-week-day">Sat</li>
-              <li class="calendar__table-week-day">Sun</li>
             </ul>
           </div>
-          <div class="calendar__day-list" data-bind="foreach:gridArray">
+          <div class="calendar__day-list">
             <ul v-for="(item, key) in gridArray" v-bind:key="key" class="calendar__day-list-week">
               <li v-for="(date, key) in item" v-bind:key="key" class="calendar__day" :class="dateClass(date)">
                 <button class="calendar__day-btn " v-on:click="setDate(date)" v-bind:class="{'day-selected':isActive(date)}" :disabled="isDisabled(date)">
@@ -39,9 +39,6 @@
           </div>
         </div>
       </div>
-
-
-
   </div>
 </template>
 
@@ -60,22 +57,13 @@ data() {
       let tmpDate = this.selectedMonth;
       let tmpMonth = tmpDate.getMonth() - 1;
       this.selectedMonth = new Date(tmpDate.setMonth(tmpMonth));
-      // this.currentMonthAndYear = dayjs(this.selectedMonth, 'YYYY-MM-DD');
     },
     nextMonth: function() {
       let tmpDate = this.selectedMonth;
       let tmpMonth = tmpDate.getMonth() + 1;
       this.selectedMonth = new Date(tmpDate.setMonth(tmpMonth));
-      // this.currentMonthAndYear = dayjs(this.selectedMonth, 'YYYY-MM-DD');
     },
     setDate: function(date) {
-      // if (date == this.filterDate) {
-      //   console.log('setting undefined');
-      //   // this.filterDate = undefined;
-      //   //unselected
-      // } else {
-      //   this.filterDate = date;
-      // }
       let value = [...(this.value ?? [])];
       let index = this.mode ? 1 : 0;
       value[index] = dayjs(date).format('YYYY-MM-DD');
@@ -84,34 +72,6 @@ data() {
     isActive: function(date) {
       return date === this.filterDate;
     },
-    getCalendarMatrix: function(date) {
-      let calendarMatrix = []
-
-      let startDay = new Date(date.getFullYear(), date.getMonth(), 1)
-      let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0)
-
-      // Modify the result of getDay so that we treat Monday = 0 instead of Sunday = 0
-      let startDow = (startDay.getDay() + 6) % 7;
-      let endDow = (lastDay.getDay() + 6) % 7;
-
-      // If the month didn't start on a Monday, start from the last Monday of the previous month
-      startDay.setDate(startDay.getDate() - startDow);
-
-      // If the month didn't end on a Sunday, end on the following Sunday in the next month
-      lastDay.setDate(lastDay.getDate() + (6 - endDow));
-
-      let week = []
-      while (startDay <= lastDay) {
-        week.push(new Date(startDay));
-        if (week.length === 7) {
-          calendarMatrix.push(week);
-          week = []
-        }
-        startDay.setDate(startDay.getDate() + 1)
-      }
-
-      return calendarMatrix;
-    },
     dateClass: function(date) {
       let time = dayjs(date).format('YYYY-MM-DD');
       let now = dayjs().format('YYYY-MM-DD');
@@ -119,33 +79,32 @@ data() {
       let checkOutTime = this.value[1];
       let classes = [];
       if(checkInTime && time == checkInTime) {
-        classes.push('check-in')
+        classes.push('calendar__day--check-in')
       } else if(checkOutTime && time == checkOutTime) {
-        classes.push('check-out')
+        classes.push('calendar__day--check-out')
       } else if((checkInTime && checkOutTime) && (time > checkInTime && time < checkOutTime)) {
-        classes.push('in-range')
+        classes.push('calendar__day--in-range')
       }
       if(this.disabledDays.includes(time)) {
-        classes.push('disabled-day')
+        classes.push('calendar__day--disabled-day')
+      }
+      if(this.selectedMonth.getMonth() != date.getMonth()){
+        classes.push('calendar__day--other-month');
       }
       if(now == time) {
-        classes.push('today');
+        classes.push('calendar__day--today');
       }
       return classes;
     },
     isDisabled: function (date) {
       let time = dayjs(date).format('YYYY-MM-DD');
       let now = dayjs().format('YYYY-MM-DD');
-      console.log(time);
-      console.log(now);
       let checkInTime = this.value[0];
       let checkOutTime = this.value[1];
 
       if(this.disabledDays.includes(time)) {
         return true;
       }
-
-
       if(time < now) {
         return true;
       }
@@ -168,10 +127,29 @@ data() {
     }
   },
   computed: {
-    // a computed getter
     gridArray: function() {
-      let grid = this.getCalendarMatrix(this.selectedMonth);
-      return grid;
+      let calendarMatrix = []
+
+      let startDay = new Date(this.selectedMonth.getFullYear(), this.selectedMonth.getMonth(), 1)
+      let lastDay = new Date(this.selectedMonth.getFullYear(), this.selectedMonth.getMonth() + 1, 0)
+
+      let startDow = (startDay.getDay()) % 7;
+      let endDow = (lastDay.getDay()) % 7;
+
+      startDay.setDate(startDay.getDate() - startDow);
+      lastDay.setDate(lastDay.getDate() + (6 - endDow));
+
+      let week = []
+      while (startDay <= lastDay) {
+        week.push(new Date(startDay));
+        if (week.length === 7) {
+          calendarMatrix.push(week);
+          week = []
+        }
+        startDay.setDate(startDay.getDate() + 1)
+      }
+
+      return calendarMatrix;
     },
     formattedDate: function() {
       return this.filterDate ? dayjs(this.filterDate,'YYYY-MM-DD') : '';
@@ -179,7 +157,6 @@ data() {
     currentMonthAndYear: function() {
       return dayjs(this.selectedMonth).format('MMMM YYYY');
     }
-
   }
 }
 </script>
@@ -256,11 +233,11 @@ data() {
     border-radius: 100%;
     height: 40px;
     width: 40px;
-    &.today {
+    &--today {
       border: 1px solid #00dbb1;
     }
-    &.check-in,
-    &.check-out {
+    &--check-in,
+    &--check-out {
       background-color: #00dbb1;
       position: relative;
       z-index: 1;
@@ -284,7 +261,8 @@ data() {
         .calendar__day-btn { 
           color: #00dbb1;
           position: relative;
-          z-index: 99999;
+          z-index: 9;
+      font-weight: 100;
       }
     }
   }
@@ -305,6 +283,4 @@ data() {
     }
   }
 }
-
-
 </style>

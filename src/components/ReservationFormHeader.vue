@@ -3,14 +3,14 @@
     <p class="form-header__price">
       {{ price }} zł
     </p>
-    <ReservationFormStarRating :max="5" :stars="4.5" :reviewsNumber="123"></ReservationFormStarRating>
+    <ReservationFormStarRating :max="max" :stars="stars" :reviewsNumber="reviewsNumber"></ReservationFormStarRating>
   </div>
 </template>
 
 <script>
 import ReservationFormStarRating from './ReservationFormStarRating.vue'
 export default {
-    props: ['price'],
+    props: ['price', 'max', 'stars', 'reviewsNumber'],
     components: {
         ReservationFormStarRating
     },
